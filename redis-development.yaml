@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis-development
+  namespace: argocd
+spec:
+  destination:
+    namespace: isccdb-dev
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://github.com/eshghi26/iscckustomize.git
+    targetRevision: main
+    path: apps/redis/overlays/development
+    plugin:
+      name: kustomize
