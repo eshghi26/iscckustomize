@@ -1,0 +1,77 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-database
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-delete-policy": before-hook-creation
+  namespace: nextcloud-dev
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: mariadb:10.11
+          command:
+            - /bin/sh
+            - -c
+            - |
+              until mysql -h $MYSQL_HOST \
+                -uroot -p"$MYSQL_ROOT_PASSWORD" \
+                -e "USE $MYSQL_DEFAULT_DATABASE"; do
+                echo "Waiting for database to be ready..."
+                sleep 3
+              done
+          env:
+            - name: MYSQL_HOST
+              value: mariadb.isccdb-dev.svc.cluster.local
+            - name: MYSQL_ROOT_PASSWORD
+              value: myRootPassword
+            - name: MYSQL_DEFAULT_DATABASE
+              value: myDatabase
+          securityContext:
+            runAsUser: 1000       # Non-root user ID
+            runAsGroup: 1000      # Non-root group ID
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true                  # Must not run as root
+            capabilities:
+              drop:
+                - ALL                          # Drop all capabilities
+            seccompProfile:
+              type: RuntimeDefault             # Use default seccomp profile
+      containers:
+        - name: create-db
+          image: mariadb:10.11
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: myRootPassword
+            - name: MYSQL_HOST
+              value: mariadb.isccdb-dev.svc.cluster.local
+            - name: MYSQL_USER
+              value: isccmysqladmin
+            - name: MYSQL_DATABASE
+              value: isccnextclouddb
+            - name: MYSQL_PASSWORD
+              value: isccpassword
+          securityContext:
+            runAsUser: 1000       # Non-root user ID
+            runAsGroup: 1000      # Non-root group ID
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true                  # Must not run as root
+            capabilities:
+              drop:
+                - ALL                          # Drop all capabilities
+            seccompProfile:
+              type: RuntimeDefault             # Use default seccomp profile
+          command: ["sh", "-c"]
+          args:
+            - |
+              mysql -h $MYSQL_HOST -uroot -p$MYSQL_ROOT_PASSWORD -e "
+              CREATE DATABASE IF NOT EXISTS \`$MYSQL_DATABASE\`;
+              CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
+              GRANT ALL PRIVILEGES ON \`$MYSQL_DATABASE\`.* TO '$MYSQL_USER'@'%';
+              FLUSH PRIVILEGES;"
+      restartPolicy: Never
+  backoffLimit: 3

@@ -1,0 +1,17 @@
+password: myRootPassword
+
+persistence:
+  size: 13Gi
+
+networkPolicy:
+  enabled: true
+  ingressNSMatchLabels:
+    environment: development
+  ingressNSPodMatchLabels:
+    environment: development
+
+fullnameOverride: redis
+
+redis:
+  livenessProbe:
+    initialDelaySeconds: 120
