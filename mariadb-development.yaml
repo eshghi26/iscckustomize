@@ -12,5 +12,3 @@ spec:
     repoURL: https://github.com/eshghi26/iscckustomize.git
     targetRevision: main
     path: apps/mariadb/overlays/development
-    plugin:
-      name: kustomize

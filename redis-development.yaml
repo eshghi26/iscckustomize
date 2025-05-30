@@ -12,5 +12,3 @@ spec:
     repoURL: https://github.com/eshghi26/iscckustomize.git
     targetRevision: main
     path: apps/redis/overlays/development
-    plugin:
-      name: kustomize
