@@ -8,6 +8,5 @@ helmCharts:
   - name: mariadb-galera
     repo: https://charts.bitnami.com/bitnami
     version: 7.0.0  # Use the latest version
-    valuesFile: values-common.yaml
     releaseName: mariadb
     namespace: isccdb-dev
