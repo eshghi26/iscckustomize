@@ -1,12 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: isccdb-dev
-
 helmCharts:
-  - name: mariadb
-    repo: file://../../../charts/mariadb
-    releaseName: mariadb
-    version: 1.0.0
+  - name: mariadb-galera
+    repo: https://charts.bitnami.com/bitnami
+    version: 11.4.0
+    releaseName: mariadb-galera
     namespace: isccdb-dev
     valuesFile: values.yaml
