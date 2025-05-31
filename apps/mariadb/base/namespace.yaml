@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    app.kubernetes.io/version: 0.1.0
+    argocd.argoproj.io/instance: iscc-db-development-namespace
+    infra.dg-i.net/forecastle-included: 'true'
+    infra.dg-i.net/prometheus-monitored: 'true'
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/warn: restricted
+    environment: "development"
+  name: isccdb-dev
