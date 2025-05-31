@@ -1,14 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mariadb-development
+  name: mariadb-dev
   namespace: argocd
 spec:
-  destination:
-    namespace: isccdb-dev
-    server: https://kubernetes.default.svc
   project: default
   source:
     repoURL: https://github.com/eshghi26/iscckustomize.git
-    targetRevision: main
+    targetRevision: HEAD
     path: apps/mariadb/overlays/development
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: isccdb-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
