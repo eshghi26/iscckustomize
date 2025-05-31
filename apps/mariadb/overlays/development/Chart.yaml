@@ -1,8 +1,0 @@
-apiVersion: v2
-name: mariadb-galera-deployment
-description: A wrapper for Bitnami MariaDB Galera with our custom configurations
-
-dependencies:
-  - name: mariadb-galera
-    version: "7.0.0"  # Use latest version
-    repository: "https://charts.bitnami.com/bitnami"
