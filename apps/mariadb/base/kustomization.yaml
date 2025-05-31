@@ -3,8 +3,8 @@ resources:
 
 helmCharts:
   - name: mariadb
-    path: ./mariadb  # relative to the kustomization.yaml file
+    repo: oci://registry-1.docker.io/bitnamicharts/mariadb-galera
     releaseName: mariadb
     namespace: isccdb-dev
     includeCRDs: true
-    valuesFile: mariadb/values.yaml
+    valuesFile: values.yaml
